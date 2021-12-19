@@ -1,24 +1,29 @@
 <template>
-  <form @submit.prevent='test'>
-      <input type="text" placeholder="Логин">
-      <input type="password" placeholder="Пароль">
+  <form @submit.prevent='auth'>
+      <input v-model="userLogin" type="text" placeholder="Логин">
+      <input v-model="userPassword" type="password" placeholder="Пароль">
       <input type="submit" value='Войти'>
   </form>
 </template>
 
 <script>
-import Api from "@/api/index";
+import {mapActions} from 'vuex'
+
 export default {
     data(){
         return{
-            
+            userLogin:'',
+            userPassword:''
         }
     },
     methods:{
-        test(){
-            // this.$router.push('/')
-            console.log(Api.login());
-
+        ...mapActions({
+            login:'login'
+        }),
+        auth(){
+            
+            this.login({username: this. userLogin, password: this.userPassword})
+            
         }
     },
     mounted(){
