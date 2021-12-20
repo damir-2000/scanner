@@ -3,6 +3,7 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.getRoutes),
-    path('token/', include('api.auth.urls'))
+    path('', views.get_routes),
+    path('token/', include('api.auth.urls')),
+    path('registration', views.create_user),
 ]
