@@ -1,8 +1,17 @@
 <template>
   <form @submit.prevent='auth'>
-      <input v-model="userLogin" type="text" placeholder="Логин">
-      <input v-model="userPassword" type="password" placeholder="Пароль">
-      <input type="submit" value='Войти'>
+      <p>
+          <label for="loginInput">Логин</label> <br />
+          <input id='loginInput' v-model="userLogin" type="text" placeholder="Логин">
+      </p>
+      <p>
+          <label for="passwordInput">Пароль</label> <br />
+          <input id='passwordInput' v-model="userPassword" type="password" placeholder="Пароль">
+      </p>
+      <p>
+          <input type="submit" value='Войти'>
+      </p>
+      
   </form>
 </template>
 
@@ -21,8 +30,17 @@ export default {
             login:'login'
         }),
         auth(){
-            
             this.login({username: this. userLogin, password: this.userPassword})
+            .then(data=>{
+                const status = data.status
+                if (status == 200) {
+                    console.log('acces');
+                    this.$router.push('/')
+                }
+                else if(status == 401){
+                    console.log('unacces');
+                }
+            })
             
         }
     },

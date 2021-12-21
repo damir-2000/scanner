@@ -5,18 +5,17 @@ class Api{
         this.client = axios.create({
             baseURL:'http://localhost:8000/api/'
         })
-        const token = window.localStorage.getItem('token')
-        if(token){
-            this.client.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(token).access}`
+        this.token = window.localStorage.getItem('token')
+        if(this.token){
+            this.client.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(this.token).access}`
         }
-        
     }
     loginUser(body){
-        
-        return this.client.post('token/', body).
-        then(response => {
+        return this.client.post('token/', body)
+        .then(response => {
             const userData = response.data
             window.localStorage.setItem('token', JSON.stringify(userData))
+            this.client.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`
             return {status: response.status, userData: jwtDecode(response.data.access)}
 
         }).catch(error =>{
@@ -24,7 +23,11 @@ class Api{
             return {status: error.response.status, userData: ""}
         })
         
-        
+    }
+    logout(){
+        window.localStorage.removeItem('token')
+        this.client.defaults.headers.common['Authorization'] = ``
+        this.token = ''
     }
     updateToken(){
         const refreshToken = JSON.parse(window.localStorage.getItem('token')).refresh
@@ -33,6 +36,7 @@ class Api{
         then(response => {
             const userData = response.data
             window.localStorage.setItem('token', JSON.stringify(userData))
+            this.client.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`
             return {status: response.status, userData: jwtDecode(response.data.access)}
 
         }).catch(error =>{

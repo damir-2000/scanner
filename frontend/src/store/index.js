@@ -5,57 +5,56 @@ import api from "@/api";
 export default createStore({
   state: {
     userData: {},
-    isAuth: false
+    isAuth: false,
   },
   mutations: {
-    setIsAuth(state) {
-      state.isAuth = true
+    setIsAuth(state, boolean) {
+      state.isAuth = boolean;
     },
     setUserData(state, userData) {
-      state.userData = userData
-    }
+      state.userData = userData;
+    },
   },
 
   actions: {
     login(context, body) {
-      api.loginUser(body)
-        .then(data => {
-
-          const status = data.status
-          const userData = data.userData
-          if (status == 200) {
-            context.commit('setIsAuth')
-            context.commit('setUserData', userData)
-          }
-          console.log(data);
-        })
+      return api.loginUser(body).then((data) => {
+        const status = data.status;
+        const userData = data.userData;
+        if (status == 200) {
+          context.commit("setIsAuth", true);
+          context.commit("setUserData", userData);
+        }
+        return data
+      });
     },
-
+    logout(context){
+      api.logout()
+      context.commit("setIsAuth", false);
+      context.commit("setUserData", {});
+    },
     isAuthorized(context) {
+      if (context.state.isAuth) {
+        return true;
+      }
       if (api.existToken()) {
-        return api.updateToken()
-          .then(data => {
-            const status = data.status
-            const userData = data.userData
-            if (status == 200) {
-              context.commit('setIsAuth')
-              context.commit('setUserData', userData)
-              return true
-            }
-            else {
-              
-              return false
-            }
-
-          })
+        return api.updateToken().then((data) => {
+          const status = data.status;
+          const userData = data.userData;
+          if (status == 200) {
+            context.commit("setIsAuth", true);
+            context.commit("setUserData", userData);
+            return true;
+          } else {
+            return false;
+          }
+        });
+      } else {
+        return new Promise((resolve) => {
+          resolve(false);
+        });
       }
-      else {
-        return false
-      }
-
-    }
+    },
   },
-  modules: {
-
-  },
+  modules: {},
 });
