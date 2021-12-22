@@ -1,13 +1,32 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
+from users.models import GroupUser, CustomUser
+from .models import Attendance
 
 
-class UserCreate (serializers.ModelSerializer):
+class GroupListSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = GroupUser
+        fields = '__all__'
+
+
+class UserSerializers(serializers.ModelSerializer):
+    group_user = GroupListSerializers()
 
     class Meta:
-        model = User
-        fields = ['username', 'email']
+        model = CustomUser
+        fields = ['id', 'first_name', 'last_name', 'group_user']
 
-    def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
+
+class ScannerSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username']
+
+
+class AttendanceSerializers(serializers.ModelSerializer):
+    user = UserSerializers()
+    scanner = ScannerSerializers()
+
+    class Meta:
+        model = Attendance
+        fields = '__all__'

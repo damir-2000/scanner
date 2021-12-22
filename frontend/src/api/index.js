@@ -10,6 +10,7 @@ class Api{
             this.client.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(this.token).access}`
         }
     }
+    
     loginUser(body){
         return this.client.post('token/', body)
         .then(response => {
@@ -24,11 +25,24 @@ class Api{
         })
         
     }
+    
+    registrationUser(body){
+        return this.client.post('registration', body)
+        .then(response => {
+            return {status: response.status, userData: response.data}
+
+        }).catch(error =>{
+            
+            return {status: error.response.status, userData: error.response.data}
+        })
+    }
+    
     logout(){
         window.localStorage.removeItem('token')
         this.client.defaults.headers.common['Authorization'] = ``
         this.token = ''
     }
+    
     updateToken(){
         const refreshToken = JSON.parse(window.localStorage.getItem('token')).refresh
 
@@ -43,7 +57,7 @@ class Api{
             return {status: error.response.status, userData: ""}
         })
     }
-
+    
     existToken(){
         const token = window.localStorage.getItem('token')
         if(token){
@@ -52,6 +66,16 @@ class Api{
         else{
             return false
         }
+    }
+    
+    groupList(){
+        return this.client.get('/group_list')
+        .then(response=>{
+            return {status: response.status, groupList: response.data}
+        })
+        .catch(error =>{
+            return {status: error.response.status, groupList: ""}
+        })
     }
     
     getRoute(){

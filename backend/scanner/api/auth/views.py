@@ -9,7 +9,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         # Add custom claims
         token['username'] = user.username
-        # ...
+        token['firstname'] = user.first_name
+        token['lastname'] = user.last_name
+        token['group'] = user.group_user.name
+        token['email'] = user.email
+        token['role'] = [role.name for role in user.groups.all()]
+
 
         return token
 

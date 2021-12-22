@@ -28,6 +28,9 @@ export default createStore({
         return data
       });
     },
+    registration(context, body){
+      return api.registrationUser(body)
+    },
     logout(context){
       api.logout()
       context.commit("setIsAuth", false);
@@ -55,6 +58,9 @@ export default createStore({
         });
       }
     },
+    groupList(){
+      return api.groupList()
+    }
   },
   modules: {},
 });
