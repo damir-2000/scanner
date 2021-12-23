@@ -16,7 +16,6 @@
         <th>Дата</th>
         <th>Пришел</th>
         <th>Ушел</th>
-        <th>Разница</th>
       </tr>
     </thead>
     <tbody>
@@ -41,9 +40,6 @@
         </td>
         <td>
           {{ item.time_gone }}
-        </td>
-        <td>
-          {{ item.difference }}
         </td>
       </tr>
     </tbody>

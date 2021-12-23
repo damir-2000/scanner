@@ -3,7 +3,7 @@ import jwtDecode from "jwt-decode";
 class Api{
     constructor(){
         this.client = axios.create({
-            baseURL:'http://localhost:8000/api/'
+            baseURL:'http://192.168.100.8:8000/api/'
         })
         this.token = window.localStorage.getItem('token')
         if(this.token){
@@ -60,7 +60,7 @@ class Api{
     
     refresh(){
         const tokenData = jwtDecode(JSON.parse(window.localStorage.getItem('token')).access)
-        if (tokenData.exp < new Date().getTime()/1000) {
+        if (tokenData.exp - 10 < new Date().getTime()/1000) {
             this.updateToken()
         }
         
@@ -78,18 +78,17 @@ class Api{
     
     qrGenerateData(){
         this.refresh()
-        return this.client.get('/generate')
+        return this.client.get('/generate', {timeout: 100})
         .then(response => {
             return {status: response.status, userData: response.data}
 
         }).catch(error =>{
-            
             return {status: error.response.status, userData: ''}
         })
     }
     
     groupList(){
-        return this.client.get('/group_list')
+        return this.client.get('group_list')
         .then(response=>{
             return {status: response.status, groupList: response.data}
         })
@@ -98,12 +97,23 @@ class Api{
         })
     }
     attendanceList(){
-        return this.client.get('/attendance_list')
+        this.refresh()
+        return this.client.get('attendance_list', {timeout: 100})
         .then(response=>{
             return {status: response.status, attendanceList: response.data}
         })
         .catch(error =>{
             return {status: error.response.status, attendanceList: ""}
+        })
+    }
+    detect(body){
+        this.refresh()
+        return this.client.post('detect', body, {timeout: 100})
+        .then(response=>{
+            return {status: response.status, userData: response.data}
+        })
+        .catch(error =>{
+            return {status: error.response.status, userData: ""}
         })
     }
     

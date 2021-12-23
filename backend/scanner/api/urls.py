@@ -9,4 +9,5 @@ urlpatterns = [
     path('group_list', views.group_list_view),
     path('attendance_list', views.attendance_list_view),
     path('generate', views.generate_view),
+    path('detect', views.scanner_detect_view),
 ]

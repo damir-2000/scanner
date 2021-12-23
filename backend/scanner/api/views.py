@@ -1,3 +1,5 @@
+import datetime
+
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -6,7 +8,8 @@ from django.contrib.auth.models import Group
 from .serializers import GroupListSerializers, AttendanceSerializers
 from users.models import GroupUser
 from .models import Attendance
-from time import time
+import time
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -48,6 +51,7 @@ def create_user(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def attendance_list_view(request):
     attendance_list = Attendance.objects.all()
     serializer = AttendanceSerializers(attendance_list, many=True)
@@ -59,6 +63,46 @@ def attendance_list_view(request):
 def generate_view(request):
     data = {
         'id': request.user.id,
-        'time': time()
+        'time': time.time()
     }
+    return Response(data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def scanner_detect_view(request):
+    data = {
+        "access": 0
+    }
+    exp_time = request.data.get('time')
+    if time.time() - exp_time < 30:
+        user_id = request.data.get('id')
+        status = None
+        attendance = Attendance.objects.filter(user=user_id, date=datetime.date.today()).last()
+        user = CustomUser.objects.get(id=user_id)
+        scanner = CustomUser.objects.get(id=request.user.id)
+        if attendance and attendance.time_gone is None:
+            attendance.time_gone = datetime.datetime.now().time()
+            attendance.save()
+            status = 1
+        else:
+            attendance = Attendance.objects.create(
+                user=user,
+                scanner=scanner,
+                time_come=datetime.datetime.now().time()
+            )
+            status = 0
+
+
+        data = {
+            "access": 1,
+            "status": status,
+            'user': {
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'group': user.group_user.name,
+                'date': datetime.date.today(),
+                'time': datetime.datetime.now().time()
+            }
+        }
     return Response(data)

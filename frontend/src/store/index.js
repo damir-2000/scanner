@@ -71,6 +71,9 @@ export default createStore({
     
     generate(){
       return api.qrGenerateData()
+    },
+    detect(context, body){
+      return api.detect(body)
     }
   },
   modules: {},

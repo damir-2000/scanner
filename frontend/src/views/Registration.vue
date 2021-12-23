@@ -100,7 +100,8 @@ export default {
                 this.firstName != '' && 
                 this.lastName != '' &&
                 this.group != '' &&
-                this.email != ''
+                this.email != '' &&
+                this.userPassword == this.repeatUserPassword
             ) {
                 this.registration({
                 username: this.userLogin, 
