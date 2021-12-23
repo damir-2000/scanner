@@ -28,14 +28,17 @@ export default createStore({
         return data
       });
     },
+    
     registration(context, body){
       return api.registrationUser(body)
     },
+    
     logout(context){
       api.logout()
       context.commit("setIsAuth", false);
       context.commit("setUserData", {});
     },
+    
     isAuthorized(context) {
       if (context.state.isAuth) {
         return true;
@@ -58,8 +61,16 @@ export default createStore({
         });
       }
     },
+    
     groupList(){
       return api.groupList()
+    },
+    attendanceList(){
+      return api.attendanceList()
+    },
+    
+    generate(){
+      return api.qrGenerateData()
     }
   },
   modules: {},

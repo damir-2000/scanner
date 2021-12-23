@@ -124,7 +124,6 @@ export default {
         this.groupList()
         .then(data=>{
             this.selectGroupList = data.groupList
-            console.log(this.selectGroupList);
         })
     }
 }

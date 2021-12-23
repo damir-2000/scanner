@@ -9,5 +9,6 @@ urlpatterns = [
     path('registration', views.Index.as_view()),
     path('scanner', views.Index.as_view()),
     path('generator', views.Index.as_view()),
+    path('attendance', views.Index.as_view()),
 ]
 

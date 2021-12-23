@@ -50,7 +50,6 @@ export default {
           const status = data.status;
           if (status == 200) {
             console.log("acces");
-            console.log(data);
             this.$router.push("/");
           } else if (status == 401) {
             console.log("unacces");

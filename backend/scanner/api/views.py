@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 from .serializers import GroupListSerializers, AttendanceSerializers
 from users.models import GroupUser
 from .models import Attendance
-
+from time import time
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -54,3 +54,11 @@ def attendance_list_view(request):
     return Response(serializer.data)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def generate_view(request):
+    data = {
+        'id': request.user.id,
+        'time': time()
+    }
+    return Response(data)

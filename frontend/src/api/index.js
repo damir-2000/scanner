@@ -58,6 +58,14 @@ class Api{
         })
     }
     
+    refresh(){
+        const tokenData = jwtDecode(JSON.parse(window.localStorage.getItem('token')).access)
+        if (tokenData.exp < new Date().getTime()/1000) {
+            this.updateToken()
+        }
+        
+    }
+    
     existToken(){
         const token = window.localStorage.getItem('token')
         if(token){
@@ -66,6 +74,18 @@ class Api{
         else{
             return false
         }
+    }
+    
+    qrGenerateData(){
+        this.refresh()
+        return this.client.get('/generate')
+        .then(response => {
+            return {status: response.status, userData: response.data}
+
+        }).catch(error =>{
+            
+            return {status: error.response.status, userData: ''}
+        })
     }
     
     groupList(){
@@ -77,22 +97,18 @@ class Api{
             return {status: error.response.status, groupList: ""}
         })
     }
-    
-    getRoute(){
-        this.client.get('/').
-        then(response => {
-            console.log(response.data);  
-        }).catch(error =>{
-            console.log(error.response.status)
-            if(error.response.status == 401){
-                const update = this.updateToken()
-                console.log(update);
-                if(update){
-                    this.getRoute()
-                }
-            }
+    attendanceList(){
+        return this.client.get('/attendance_list')
+        .then(response=>{
+            return {status: response.status, attendanceList: response.data}
+        })
+        .catch(error =>{
+            return {status: error.response.status, attendanceList: ""}
         })
     }
+    
+    
+    
 }
 
 export default new Api()

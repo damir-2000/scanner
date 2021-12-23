@@ -1,4 +1,11 @@
 <template>
+  <nav>
+    <ul>
+      <li>
+        <a href="/logout">Выйти</a>
+      </li>
+    </ul>
+  </nav>
   <p class="error">{{ error }}</p>
 
   <p class="decode-result">
@@ -25,7 +32,7 @@ export default {
 
   methods: {
     onDecode(result) {
-        console.log();
+      console.log();
       this.result = result;
     },
 
@@ -58,8 +65,7 @@ export default {
 </script>
 
 <style lang="scss">
-.stream{
-    width: 50%;
-    
+.stream {
+  width: 50%;
 }
 </style>

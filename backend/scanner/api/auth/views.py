@@ -9,13 +9,11 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         # Add custom claims
         token['username'] = user.username
-        token['firstname'] = user.first_name
-        token['lastname'] = user.last_name
-        token['group'] = user.group_user.name
+        token['first_name'] = user.first_name
+        token['last_name'] = user.last_name
+        token['group'] = user.group_user.name if user.group_user is not None else ''
         token['email'] = user.email
         token['role'] = [role.name for role in user.groups.all()]
-
-
         return token
 
 
