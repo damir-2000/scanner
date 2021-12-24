@@ -62,7 +62,6 @@ export default {
             this.openModal();
             this.status = data.userData.status
             this.userData = data.userData.user;
-            console.log(data);
           }
         });
         this.result = result;

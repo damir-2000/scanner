@@ -46,8 +46,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(to);
-  console.log(from);
 
   store.dispatch("isAuthorized").then((isAuth) => {
     if (to.path == "/logout") {
@@ -57,7 +55,6 @@ router.beforeEach((to, from, next) => {
       (isAuth && to.path != "/login" && to.path != "/registration") ||
       (!isAuth && (to.path == "/login" || to.path == "/registration"))
     ) {
-      console.log(store.state.userData?.role);
       if (
         store.state.userData?.role &&
         store.state.userData.role.indexOf("user") != -1 &&
